@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inconsolata', monospace;
+}
+
+.container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: #151d21;
+}
+
+button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+button {
+  background: none;
+  color: #cccccc;
+  width: 240px;
+  height: 240px;
+  border: 1px solid #b75c5c;
+  font-size: 34px;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:before{
+  content: '';
+  display: block;
+  position: absolute;
+  background: rgba(255,255,255,.5);
+  width: 60px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: .5;
+  filter: blur(30px);
+  transform: translateX(-130px) skewX(-15deg);
+}
+
+button:after{
+  content: '';
+  display: block;
+  position: absolute;
+  background: rgba(255,255,255,.2);
+  width: 30px;
+  height: 100%;
+  left: 30px;
+  top: 0;
+  opacity: 0;
+  filter: blur(30px);
+  transform: translateX(-100px) scaleX(-15);
+}
+
+button:hover:before {
+  transform: translateX(300px) skewX(-15deg);
+  opacity: .6;
+  transition: .4s;
+}
+
+button:hover:after {
+  transform: translateX(300px) skewX(-15deg);
+  opacity: 1;
+  transition: .4s;
+}
+
+button:hover {
+  background: #b75c5c;
+  transition: 0.4s;
+  cursor: pointer;
+  transform: scale(1.05) translate(-47.5%, -47.5%);
+}
+
+button:active {
+  transform: scale(0.95) translate(-52.5%, -52.5%);
+  transition: 0.1s;
+}
