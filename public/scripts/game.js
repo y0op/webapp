@@ -1,10 +1,11 @@
 $(function () {
     const socket = io();
     let gameId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
-    let playerId;
+    let playerId = socket.id;
 
-    socket.emit('game-page-loaded', function (pId) {
-        playerId = pId;
+    socket.emit('game-page-loaded', {
+        playerId: playerId,
+        gameId: gameId,
     });
 
     $('.grid').click(function (event) {
