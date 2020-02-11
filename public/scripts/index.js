@@ -1,12 +1,11 @@
 $(function () {
-    var socket = io();
+    const socket = io();
+    let gameId;
 
-    var gameId;
-
-    $('#play-button').click(() => {
-        socket.emit('request-start', function (unique) {
+    $("#play-button").on( "click",function () {
+        socket.emit("request-start", function (unique) {
             gameId = unique;
-            window.location.href = '/game/' + gameId;
+            window.location.replace('/game/' + gameId);
         });
     });
 });
