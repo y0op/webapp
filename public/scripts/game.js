@@ -6,4 +6,14 @@ $(function () {
     socket.emit('game-page-loaded', function (pId) {
         playerId = pId;
     });
+
+    $('.grid').click(function (event) {
+        if ($(event.target).is(':button')) {
+            socket.emit('place-request', {
+                gameId: gameId,
+                playerId: playerId,
+                place: parseInt($(event.target).attr('id')),
+            });
+        }
+    });
 });
