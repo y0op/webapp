@@ -21,6 +21,10 @@ app.get('/game', function (req, res) {
 var games = [];
 io.on('connection', function (socket) {
 
+    socket.on("game-page-loaded", function (callback) {
+        callback(socket.id);
+    });
+
     socket.on("request-start", function (callback) {
         const unique = nanoid(12);
         games.push({
