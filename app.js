@@ -44,7 +44,6 @@ io.on('connection', function (socket) {
             ],
             turn: 'x',
             players: {
-                count: 1,
                 x: '',
                 o: '',
             }
@@ -62,13 +61,25 @@ io.on('connection', function (socket) {
             return;
         }
 
-        socket.emit('place-taken', {
-            place: data.place,
-        });
-
         if (placeTaken(data.gameId, data.place)) {
-
+            socket.emit('place-taken', {
+                place: data.place,
+            });
+            return;
         }
+
+        let char = Object.keys(data.players).find(key => data.players[key] == data.playerId)
+        const won = detectWin(game.gameId, char);
+        const tie = detectTie(game.gameId);
+
+        socket.emit('move-accepted', {
+            won: won,
+            tie: tie,
+            place: data.place,
+            gameId: data.gameId,
+            playerId: data.playerId,
+            player: char,
+        });
     });
 });
 

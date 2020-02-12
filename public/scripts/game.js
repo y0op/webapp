@@ -20,6 +20,10 @@ $(function () {
         },500)
     });
 
+    socket.on('move-accepted', function (data) {
+        // Handle me uwu
+    });
+
     $('.grid').click(function (event) {
         if ($(event.target).is(':button')) {
             socket.emit('place-request', {
