@@ -56,17 +56,19 @@ io.on('connection', function (socket) {
     socket.on('place-request', function (data) {
         const game = games.find(g => g.gameId === data.gameId);
 
+
         if (!game.x || !game.o) {
-            // Both players not present
+            socket.emit('players-not-present');
             return;
         }
 
-        // Rows then columns
-        let row = data.place > 6 ? 2 : (data.place > 3 ? 1 : 0);
-        let column  = row === 2 ? data.place - 7 : (data.place === 1 ? data.place - 4 : data.place - 1);
-        let char = games[row][column];
+        socket.emit('place-taken', {
+            place: data.place,
+        });
 
+        if (placeTaken(data.gameId, data.place)) {
 
+        }
     });
 });
 
@@ -76,12 +78,12 @@ app.get('/game/:id', function (req, res) {
 
 server.listen(3000);
 
-function spaceTaken(gameId, place) {
+function placeTaken(gameId, place) {
     const game = games.find(g => g.gameId === gameId);
 
     let row = place > 6 ? 2 : (place > 3 ? 1 : 0);
-    let column  = row === 2 ? place - 7 : (place === 1 ? place - 4 : place - 1);
-    let char = games[row][column];
+    let column = row === 2 ? place - 7 : (row === 1 ? place - 4 : place - 1);
+    let char = game.gameState[row][column];
 
     return char == ' ';
 }

@@ -11,7 +11,7 @@
   background: #151d21;
 }
 
-.turn {
+#turn {
   position: absolute;
   top: 50%;
   left: calc(25% - (237px / 2));
@@ -28,19 +28,19 @@
           0 0 0 6px #b75c5c;
 }
 
-.turn .text {
+#turn .text {
   text-align: center;
   font-size: 45px;
   padding-top: 10px;
 }
 
-.turn .symbol {
+#turn .symbol {
   font-size: 110px;
   font-weight: bold;
   text-align: center;
 }
 
-.turn h1 {
+#turn h1 {
   color: #cccccc;
 }
 
@@ -88,4 +88,46 @@
 
 .grid > button:focus {
   outline: none;
+}
+
+#status {
+  position: absolute;
+  left: 50%;
+  top: calc(25% - (237px / 2));
+  transform: translate(-50%, -50%);
+
+  color: #cccccc;
+  background-color: #b75c5c;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 20px;
+
+  opacity: 0;
+}
+
+.fade {
+  animation: fade 2s linear;
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  20%, 60% { opacity: 1 }
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
