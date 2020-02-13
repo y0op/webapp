@@ -21,7 +21,15 @@ $(function () {
     });
 
     socket.on('move-accepted', function (data) {
-        // Handle me uwu
+        $('.grid').find('#' + data.place).html(data.player);
+
+        if (data.won) {
+
+        } else if (data.tie) {
+
+        } else {
+
+        }
     });
 
     $('.grid').click(function (event) {

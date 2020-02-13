@@ -104,17 +104,57 @@ function detectWin(gameId, char) {
     let game = games.find(g => g.gameId === gameId);
     if (!game) return false;
 
-    // Up & down, left & right
+    let data = {
+        won: false,
+        places: [],
+    };
+
+    // Vertical and Horizontal
     for (let i = 0; i < 3; i++) {
-        if (game.gameState[i][0] === char && game.gameState[i][1] === char && game.gameState[i][2] ||
-            game.gameState[0][i] === char && game.gameState[1][i] === char && game.gameState[2][i]) {
-            return true;
+
+        let vertical = [
+            game.gameState[0][i],
+            game.gameState[1][i],
+            game.gameState[2][i],
+        ];
+
+        if (game.gameState[i].every(n => n == char)) {
+            for (let k in [1, 2, 3]) {
+                data.places.push((i * 3) + k);
+            }
+            data.won = true;
+        } else if (vertical.every(n => n == char)) {
+            for (let k in [1, 2, 3]) {
+                data.places.push(k * (i + 1));
+            }
+            data.won = true;
         }
     }
 
+    let a1 = [];
+    let a2 = [];
+
     // Diagonal
-    return game.gameState[0][0] === char && game.gameState[1][1] === char && game.gameState[2][2] === char ||
-        game.gameState[0][2] === char && game.gameState[1][1] === char && game.gameState[2][0] === char;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            a1.push(game.gameState[i][j]);
+            a2.push(game.gameState[i][2-j]);
+        }
+    }
+
+    if (a1.every(n => n == char)) {
+        data.won = true;
+        for (let k in [1, 2, 3]) {
+            data.places.push((k - 1) * 3 + k);
+        }
+    } else if (a2.every(n => n == char)) {
+        data.won = true;
+        for (let k in [1, 2, 3]) {
+            data.places.push(k * 3 - (k - 1));
+        }
+    }
+
+    return data;
 }
 
 function detectTie(gameId) {
