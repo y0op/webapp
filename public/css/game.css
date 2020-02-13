@@ -105,6 +105,12 @@
   opacity: 0;
 }
 
+.won {
+  background-color: #b75c5c;
+  transform: scale(1.05);
+  transition: 2s;
+}
+
 .fade {
   animation: fade 2s linear;
 }

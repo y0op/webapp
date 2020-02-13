@@ -37,6 +37,7 @@ io.on('connection', function (socket) {
         const unique = nanoid(12);
         games.push({
             gameId: unique,
+            winAlert: false,
             gameState: [
                 [' ', ' ', ' '],
                 [' ', ' ', ' '],
@@ -68,17 +69,27 @@ io.on('connection', function (socket) {
             return;
         }
 
-        let char = Object.keys(data.players).find(key => data.players[key] == data.playerId)
+        let char = Object.keys(data.players).find(key => data.players[key] == data.playerId);
+
+        if (game.turn != char) {
+            // Not your turn
+            return;
+        }
+
+        // Change turn
+        game.turn = game.turn == 'x' ? 'o' : 'x';
+
         const won = detectWin(game.gameId, char);
         const tie = detectTie(game.gameId);
 
         socket.emit('move-accepted', {
-            won: won,
+            winData: won,
             tie: tie,
             place: data.place,
             gameId: data.gameId,
             playerId: data.playerId,
             player: char,
+            newTurn: game.turn,
         });
     });
 });
@@ -158,7 +169,7 @@ function detectWin(gameId, char) {
 }
 
 function detectTie(gameId) {
-    if (detectWin(gameId, 'x') || detectWin(gameId, 'o')) {
+    if (detectWin(gameId, 'x').won || detectWin(gameId, 'o').won) {
         return false;
     }
 
