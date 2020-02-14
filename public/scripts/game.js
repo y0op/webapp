@@ -4,7 +4,7 @@ $(function () {
     let playerId = socket.id;
 
     socket.emit('game-page-loaded', {
-        playerId: playerId,
+        playerId: socket.id,
         gameId: gameId,
     });
 
