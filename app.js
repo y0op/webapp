@@ -3,6 +3,8 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
+const PORT = 3000;
+
 const nanoid = require('nanoid');
 
 app.engine('html', require('ejs').renderFile);
@@ -98,7 +100,9 @@ app.get('/game/:id', function (req, res) {
     res.render('game.ejs');
 });
 
-server.listen(3000);
+server.listen(PORT, function () {
+    console.log("Server running on ${PORT}");
+});
 
 function placeTaken(gameId, place) {
     const game = games.find(g => g.gameId === gameId);
