@@ -27,11 +27,9 @@ io.on('connection', function (socket) {
         const game = games.find(g => g.gameId === data.gameId);
 
         if (!game.x) {
-            game.x = data.playerId;
-            console.log("set x");
+            game.players.x = data.playerId;
         } else if (!game.o) {
-            game.o = data.playerId;
-            console.log("set o");
+            game.players.o = data.playerId;
         } else {
             console.log("something went wrong");
         }
