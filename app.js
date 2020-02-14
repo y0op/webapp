@@ -28,11 +28,15 @@ io.on('connection', function (socket) {
 
         if (!game.x) {
             game.x = data.playerId;
+            console.log("set x");
         } else if (!game.o) {
             game.o = data.playerId;
+            console.log("set o");
         } else {
             console.log("something went wrong");
         }
+
+        console.log(game);
     });
 
     socket.on("request-start", function (callback) {
@@ -101,7 +105,7 @@ app.get('/game/:id', function (req, res) {
 });
 
 server.listen(PORT, function () {
-    console.log("Server running on ${PORT}");
+    console.log(`Server running on ${PORT}`);
 });
 
 function placeTaken(gameId, place) {
