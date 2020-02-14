@@ -3,9 +3,11 @@ $(function () {
     let gameId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
     let playerId = socket.id;
 
-    socket.emit('game-page-loaded', {
-        playerId: socket.id,
-        gameId: gameId,
+    socket.on('connection', function () {
+        socket.emit('game-page-loaded', {
+            playerId: socket.id,
+            gameId: gameId,
+        });
     });
 
     socket.on('players-not-present', function () {
