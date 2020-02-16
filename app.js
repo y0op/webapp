@@ -100,6 +100,8 @@ io.on('connection', function (socket) {
         const won = detectWin(game.gameId, char);
         const tie = detectTie(game.gameId);
 
+        console.log("win: " + won.won + ",  tie:" + tie);
+
         io.emit('move-accepted', {
             winData: won,
             tie: tie,
@@ -177,16 +179,16 @@ function detectWin(gameId, char) {
         }
     }
 
-    let a1 = [];
-    let a2 = [];
-
-    // Diagonal
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            a1.push(game.gameState[i][j]);
-            a2.push(game.gameState[i][2-j]);
-        }
-    }
+    let a1 = [
+        game.gameState[0][0],
+        game.gameState[1][1],
+        game.gameState[2][2],
+    ];
+    let a2 = [
+        game.gameState[0][2],
+        game.gameState[1][1],
+        game.gameState[2][0],
+    ];
 
     if (a1.every(n => n == char)) {
         data.won = true;
@@ -209,17 +211,11 @@ function detectTie(gameId) {
     }
 
     let game = games.find(g => g.gameId === gameId);
-    if (!game) return false;
-
-    var tied = true;
-
-    for (var arr in game.gameState) {
-        for (var char in arr) {
-            if (char !== 'x' || char !== 'o') {
-                tied = false;
-            }
-        }
+    if (!game) {
+        return false;
     }
 
-    return tied;
+    return game.gameState.every(function (arr) {
+        return arr.every(e => e == 'x' || e == 'o');
+    });
 }

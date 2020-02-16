@@ -40,6 +40,7 @@ $(function () {
 
         if (data.winData.won) {
 
+            // TODO this doesnt work!!!!!
             // Stops player from clicking other spaces while in win state
             $('.grid').click(function (event) {
                 event.stopPropagation();
