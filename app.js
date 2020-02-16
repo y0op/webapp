@@ -26,15 +26,13 @@ io.on('connection', function (socket) {
     socket.on("game-page-loaded", function (data) {
         const game = games.find(g => g.gameId === data.gameId);
 
-        if (!game.x) {
+        if (!game.players.x) {
             game.players.x = data.playerId;
-        } else if (!game.o) {
+        } else if (!game.players.o) {
             game.players.o = data.playerId;
         } else {
             console.log("something went wrong");
         }
-
-        console.log(game);
     });
 
     socket.on("request-start", function (callback) {
@@ -61,24 +59,40 @@ io.on('connection', function (socket) {
         const game = games.find(g => g.gameId === data.gameId);
 
 
-        if (!game.x || !game.o) {
-            socket.emit('players-not-present');
+        if (!game.players.x || !game.players.o) {
+            io.emit('players-not-present', {
+                gameId: data.gameId,
+            });
             return;
         }
 
         if (placeTaken(data.gameId, data.place)) {
+            // This is socket.emit() because it only needs
+            // to be sent back to the original sender
+            socket.emit('place-taken', {
+                place: data.place,
+                gameId: data.gameId
+            });
+            return;
+        }
+
+        let char = Object.keys(game.players).find(key => game.players[key] == data.playerId);
+
+        if (game.turn != char) {
+            /*
+             Not actually place taken, but same effect
+             This is socket.emit() because it only needs
+             to be sent back to the original sender
+             */
             socket.emit('place-taken', {
                 place: data.place,
             });
             return;
         }
 
-        let char = Object.keys(data.players).find(key => data.players[key] == data.playerId);
-
-        if (game.turn != char) {
-            // Not your turn
-            return;
-        }
+        // Update game state -- Run before turn changes
+        var d = placeToArr(data.place);
+        game.gameState[d.row][d.column] = game.turn;
 
         // Change turn
         game.turn = game.turn == 'x' ? 'o' : 'x';
@@ -86,7 +100,7 @@ io.on('connection', function (socket) {
         const won = detectWin(game.gameId, char);
         const tie = detectTie(game.gameId);
 
-        socket.emit('move-accepted', {
+        io.emit('move-accepted', {
             winData: won,
             tie: tie,
             place: data.place,
@@ -109,11 +123,26 @@ server.listen(PORT, function () {
 function placeTaken(gameId, place) {
     const game = games.find(g => g.gameId === gameId);
 
-    let row = place > 6 ? 2 : (place > 3 ? 1 : 0);
-    let column = row === 2 ? place - 7 : (row === 1 ? place - 4 : place - 1);
-    let char = game.gameState[row][column];
+    let d = placeToArr(place);
+    let char = game.gameState[d.row][d.column];
 
-    return char == ' ';
+    return char != ' ';
+}
+
+function placeToArr(place) {
+    var data = {
+        row: '',
+        column: '',
+    };
+
+    data.row = place > 6 ? 2 : (place > 3 ? 1 : 0);
+    data.column = data.row === 2 ? place - 7 : (data.row === 1 ? place - 4 : place - 1);
+
+    return data;
+}
+
+function arrToPlace(row, col) {
+    return row * 3 + col + 1;
 }
 
 function detectWin(gameId, char) {

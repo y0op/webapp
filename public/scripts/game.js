@@ -1,20 +1,25 @@
 $(function () {
     const socket = io();
     let gameId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
-    let playerId = socket.id;
+    let playerId;
 
     socket.on('connect', function () {
+        playerId = socket.id;
+
         socket.emit('game-page-loaded', {
-            playerId: socket.id,
+            playerId: playerId,
             gameId: gameId,
         });
     });
 
-    socket.on('players-not-present', function () {
+    socket.on('players-not-present', function (data) {
+        if (data.gameId != gameId) return;
         statusDisplay('both players must be present');
     });
 
     socket.on('place-taken', function (data) {
+        if (data.gameId != gameId) return;
+
         const element = $('.grid').find('#' + data.place);
         element.addClass('shake');
         setTimeout(function () {
@@ -23,6 +28,8 @@ $(function () {
     });
 
     socket.on('move-accepted', function (data) {
+        if (data.gameId != gameId) return;
+
         /*
         This is actually all that needs to happen, everything
         below this is just for handing wins and ties.
