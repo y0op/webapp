@@ -86,6 +86,7 @@ io.on('connection', function (socket) {
              */
             socket.emit('place-taken', {
                 place: data.place,
+                gameId: data.gameId,
             });
             return;
         }
