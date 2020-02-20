@@ -30,8 +30,8 @@ io.on('connection', function (socket) {
             game.players.x = data.playerId;
         } else if (!game.players.o) {
             game.players.o = data.playerId;
-        } else {
-            console.log("something went wrong");
+        } else if (game.players.o && game.players.x) {
+            game.spectators.push(data.playerId);
         }
     });
 
@@ -46,6 +46,7 @@ io.on('connection', function (socket) {
                 [' ', ' ', ' '],
             ],
             turn: 'x',
+            spectators: [],
             players: {
                 x: '',
                 o: '',
@@ -58,11 +59,14 @@ io.on('connection', function (socket) {
     socket.on('place-request', function (data) {
         const game = games.find(g => g.gameId === data.gameId);
 
-
         if (!game.players.x || !game.players.o) {
             io.emit('players-not-present', {
                 gameId: data.gameId,
             });
+            return;
+        }
+
+        if (game.spectators.includes(data.playerId)) {
             return;
         }
 
